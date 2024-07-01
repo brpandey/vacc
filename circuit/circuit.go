@@ -13,7 +13,7 @@ const (
 
 const (
 	vaccinated = iota + 1
-	not_vaccinated
+	notVaccinated
 )
 
 type VaccineCircuit struct {

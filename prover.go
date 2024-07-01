@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/big"
 	"math/rand"
+        "os"
 	"strconv"
 	"time"
 
@@ -40,6 +41,9 @@ type ProofRequest struct {
 	PublicWitness []byte `json:"public_witness"`
 }
 
+const dateFormat = "2006-01-02"
+const subject = "vaccine.proof"
+
 func main() {
 	// Connect to NATS server using local default url
 	nc, err := nats.Connect(nats.DefaultURL)
@@ -63,11 +67,23 @@ func main() {
 	// Aside from demonstration purposes,
 	// this should be done in a trusted setup environment
 	// Setup keys proving (private) and verifier (public)
-	pk, _, err := groth16.Setup(r1cs)
+	pk, vk, err := groth16.Setup(r1cs)
 
-	// Continuously generate data until user aborts
+        // Serialize verifier key for easy deserialization by verifier process
+        // Only changes once upon r1cs setup -- prover needs to be started first for proper synchronization
+        // Doesn't need to be sent on each proof message
+	var keyBuf bytes.Buffer
+	vk.WriteTo(&keyBuf)
+
+	err = os.WriteFile("verify.key", keyBuf.Bytes(), 0644)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Continuously generate data until user aborts to showcase stream of patient data
 	for {
-		// Generate artifical vaccine and patient data
+		// Generate vaccine and patient data
 		var vaccineData VaccineData
 		var patientData PatientData
 
@@ -85,9 +101,7 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("patient dob is %s\n", patientData.Dob)
-
-		dob, err := time.Parse("2006-01-02", patientData.Dob)
+		dob, err := time.Parse(dateFormat, patientData.Dob)
 		if err != nil {
 			fmt.Println("Error parsing date:", err)
 			return
@@ -121,19 +135,14 @@ func main() {
 		}
 
 		publicWitness, _ := witness.Public()
-
-		fmt.Printf("%v", &publicWitness)
-
 		proof, err := groth16.Prove(r1cs, pk, witness)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		var proof_buf bytes.Buffer
+		var proof_buf, witness_buf bytes.Buffer
 		proof.WriteRawTo(&proof_buf)
-
-		var witness_buf bytes.Buffer
 		publicWitness.WriteTo(&witness_buf)
 
 		// Create proof request
@@ -150,13 +159,11 @@ func main() {
 		}
 
 		// Publish proof to NATS
-		subject := "vaccine.proof"
-
 		if err := nc.Publish(subject, req); err != nil {
 			log.Fatal(err)
 		}
 
-		fmt.Println("Proof sent successfully")
+		fmt.Println("Proof sent successfully\n")
 
 		// Periodically send proof
 		time.Sleep(5 * time.Second)
