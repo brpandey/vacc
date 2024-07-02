@@ -5,43 +5,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/big"
-	"math/rand"
-        "os"
-	"strconv"
+        "math/rand"
 	"time"
 
-	"github.com/bxcodec/faker/v3"
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
-	"github.com/consensys/gnark/frontend/cs/r1cs"
-
-	mimc "github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 
 	"github.com/brpandey/vacc/circuit"
+        "github.com/brpandey/vacc/setup"
+
 	"github.com/nats-io/nats.go"
 )
-
-// Define fake vaccine data and patient data schema
-type VaccineData struct {
-	VaccineType string `faker:"oneof:influenza,malaria,hepatitis_b"`
-	//	LotNumber   string `faker:"uuid_hyphenated"`
-	LotNumber string `faker:"cc_number"`
-}
-
-type PatientData struct {
-	Dob string `faker:"date"`
-	//	MedicalRecordNum string    `faker:"uuid_hyphenated"`
-	MedicalRecordNum string `faker:"cc_number"`
-}
 
 type ProofRequest struct {
 	Proof         []byte `json:"proof"`
 	PublicWitness []byte `json:"public_witness"`
 }
 
-const dateFormat = "2006-01-02"
 const subject = "vaccine.proof"
 
 func main() {
@@ -55,80 +36,20 @@ func main() {
 	// Seed for random data generation
 	rand.Seed(time.Now().UnixNano())
 
-	// Define vaccine circuit
-	var circ circuit.VaccineCircuit
-
-	// Compile the circuit to a R1CS (Rank-1 Constraint System) using Groth16 backend
-	r1cs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circ)
-	if err != nil {
-		panic(err)
-	}
-
-	// Aside from demonstration purposes,
-	// this should be done in a trusted setup environment
-	// Setup keys proving (private) and verifier (public)
-	pk, vk, err := groth16.Setup(r1cs)
-
-        // Serialize verifier key for easy deserialization by verifier process
-        // Only changes once upon r1cs setup -- prover needs to be started first for proper synchronization
-        // Doesn't need to be sent on each proof message
-	var keyBuf bytes.Buffer
-	vk.WriteTo(&keyBuf)
-
-	err = os.WriteFile("verify.key", keyBuf.Bytes(), 0644)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+        // Initialize "trusted setup"
+        // ProvingKey could be returned as variable or as env variable if multiple provers..
+        r1cs := setup.Initialize()
+        pk := setup.ReadPKey(true)
 
 	// Continuously generate data until user aborts to showcase stream of patient data
 	for {
-		// Generate vaccine and patient data
-		var vaccineData VaccineData
-		var patientData PatientData
+                generated, flag := circuit.Generate()
 
-		// Generate vaccine data
-		err := faker.FakeData(&vaccineData)
-		if err != nil {
-			log.Println("Failed to generate vaccine data:", err)
-			continue
-		}
+                if !flag {
+                        continue
+                }
 
-		// Generate patient data
-		err = faker.FakeData(&patientData)
-		if err != nil {
-			log.Println("Failed to generate patient data:", err)
-			continue
-		}
-
-		dob, err := time.Parse(dateFormat, patientData.Dob)
-		if err != nil {
-			fmt.Println("Error parsing date:", err)
-			return
-		}
-
-		// Simulate age based on date of birth (for simplicity)
-		age := int64(time.Since(dob).Hours()) / 24 / 365 // Approximate age in years
-
-		lot, _ := strconv.Atoi(vaccineData.LotNumber)
-		mrn, _ := strconv.Atoi(patientData.MedicalRecordNum)
-
-		vac := rand.Intn(2) + 1
-		vacHash := hash(vac)
-
-		assign := circuit.VaccineCircuit{
-			Age:              age,
-			VaccineType:      rand.Intn(2),
-			LotNumber:        lot,
-			Dob:              dob.Unix(),
-			MedicalRecordNum: mrn,
-			VaccinatedSecret: vac,
-			VaccinatedHash:   vacHash,
-		}
-
-		log.Printf("Assign variables %#v\n", &assign)
-
-		witness, err := frontend.NewWitness(&assign, ecc.BN254.ScalarField())
+		witness, err := frontend.NewWitness(&generated, ecc.BN254.ScalarField())
 
 		if err != nil {
 			log.Fatal(err)
@@ -168,19 +89,4 @@ func main() {
 		// Periodically send proof
 		time.Sleep(5 * time.Second)
 	}
-}
-
-func hash(data int) []byte {
-	var bigInt = big.NewInt(int64(data))
-	var bytes = bigInt.Bytes()
-
-	mimc := mimc.NewMiMC()
-	mimc.Write(bytes)
-
-	hash := mimc.Sum(nil)
-
-	//        hi := big.NewInt(0).SetBytes(hash)
-	//        log.Println("hash.String() is ", hi.String())
-
-	return hash
 }

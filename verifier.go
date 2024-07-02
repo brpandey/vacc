@@ -5,16 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-        "os"
 
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/backend/witness"
-	"github.com/consensys/gnark/frontend"
-	"github.com/consensys/gnark/frontend/cs/r1cs"
 	"github.com/nats-io/nats.go"
 
-	"github.com/brpandey/vacc/circuit"
+        "github.com/brpandey/vacc/setup"
 )
 
 type ProofRequest struct {
@@ -33,23 +30,7 @@ func main() {
 	}
 	defer nc.Close()
 
-	var circ circuit.VaccineCircuit
-
-	// Compile the circuit to a R1CS (Rank-1 Constraint System) using Groth16 backend
-	_, err = frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circ)
-	if err != nil {
-		panic(err)
-	}
-
-        /* Read precomputed verifier key from file */
-	file, err := os.ReadFile("verify.key")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	keyBuf := *bytes.NewBuffer(file)
-        vk := groth16.NewVerifyingKey(ecc.BN254)
-        vk.ReadFrom(&keyBuf)
+        vk := setup.ReadVKey()
 
 	// Subscribe to proof messages
 	nc.Subscribe("vaccine.proof", func(msg *nats.Msg) {
