@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"log"
         "math/rand"
@@ -14,6 +12,7 @@ import (
 
 	"github.com/brpandey/vacc/circuit"
         "github.com/brpandey/vacc/setup"
+        "github.com/brpandey/vacc/msg"
 
 	"github.com/nats-io/nats.go"
 )
@@ -55,25 +54,10 @@ func main() {
 			log.Fatal(err)
 		}
 
-		var proof_buf, witness_buf bytes.Buffer
-		proof.WriteRawTo(&proof_buf)
-		publicWitness.WriteTo(&witness_buf)
-
-		// Create proof request
-		request := setup.ProofRequest{
-			Proof:         proof_buf.Bytes(),
-			PublicWitness: witness_buf.Bytes(),
-		}
-
-		req, err := json.Marshal(request)
-
-		if err != nil {
-			fmt.Println("Error marshalling request:", err)
-			return
-		}
-
+                req := msg.Serialize(msg.NewRequest(proof, publicWitness))
+                
 		// Publish proof to NATS
-		if err := nc.Publish(setup.MsgSubject, req); err != nil {
+		if err := nc.Publish(msg.Subject, req); err != nil {
 			log.Fatal(err)
 		}
 
