@@ -18,13 +18,6 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-type ProofRequest struct {
-	Proof         []byte `json:"proof"`
-	PublicWitness []byte `json:"public_witness"`
-}
-
-const subject = "vaccine.proof"
-
 func main() {
 	// Connect to NATS server using local default url
 	nc, err := nats.Connect(nats.DefaultURL)
@@ -67,7 +60,7 @@ func main() {
 		publicWitness.WriteTo(&witness_buf)
 
 		// Create proof request
-		request := ProofRequest{
+		request := setup.ProofRequest{
 			Proof:         proof_buf.Bytes(),
 			PublicWitness: witness_buf.Bytes(),
 		}
@@ -80,7 +73,7 @@ func main() {
 		}
 
 		// Publish proof to NATS
-		if err := nc.Publish(subject, req); err != nil {
+		if err := nc.Publish(setup.MsgSubject, req); err != nil {
 			log.Fatal(err)
 		}
 

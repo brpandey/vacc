@@ -14,11 +14,6 @@ import (
         "github.com/brpandey/vacc/setup"
 )
 
-type ProofRequest struct {
-	Proof         []byte `json:"proof"`
-	PublicWitness []byte `json:"public_witness"`
-}
-
 // The goal is to prove with zero-knowledge that a patient has taken a specific vaccine
 // without disclosing any other personal information.
 
@@ -33,8 +28,8 @@ func main() {
         vk := setup.ReadVKey()
 
 	// Subscribe to proof messages
-	nc.Subscribe("vaccine.proof", func(msg *nats.Msg) {
-		var proofRequest ProofRequest
+	nc.Subscribe(setup.MsgSubject, func(msg *nats.Msg) {
+		var proofRequest setup.ProofRequest
 		if err := json.Unmarshal(msg.Data, &proofRequest); err != nil {
 			fmt.Println("Error decoding proof request:", err)
 			return
