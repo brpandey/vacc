@@ -16,7 +16,7 @@ import (
 
 const envKeyProver = "Prover"
 
-func Initialize() constraint.ConstraintSystem {
+func Initialize() (constraint.ConstraintSystem, groth16.ProvingKey) {
         // Define vaccine circuit
         var circ circuit.VaccineCircuit
 
@@ -27,16 +27,13 @@ func Initialize() constraint.ConstraintSystem {
                 log.Fatal(err)
         }
 
-        // Aside from demonstration purposes,
-        // this should be done in a trusted setup environment
-        // Setup keys proving (private) and verifier (public)
+        // Setup both keys: proving (private) and verifier (public)
         pk, vk, err := groth16.Setup(r1cs)
 
-        // Serialize pk to env var, alternately, could send simply as returned value
-        serializePKey(pk)
-        serializeVKey(vk)
+        //SerializePKey(pk)
+        SerializeVKey(vk)
 
-        return r1cs
+        return r1cs, pk
 }
 
 func ReadPKey(clear bool) groth16.ProvingKey {
@@ -63,7 +60,7 @@ func ReadPKey(clear bool) groth16.ProvingKey {
 }
 
 func ReadVKey() groth16.VerifyingKey {
-        /* Read precomputed verifier key from file */
+        // Read precomputed verifier key from file
 	file, err := os.ReadFile("verify.key")
 	if err != nil {
 		log.Fatal(err)
@@ -75,7 +72,7 @@ func ReadVKey() groth16.VerifyingKey {
         return vk
 }
 
-func serializePKey(pk groth16.ProvingKey) {
+func SerializePKey(pk groth16.ProvingKey) {
         // Serialize pk to env var instead of to file
         var pkeyBuf bytes.Buffer
         pk.WriteTo(&pkeyBuf)
@@ -84,10 +81,10 @@ func serializePKey(pk groth16.ProvingKey) {
         os.Setenv(envKeyProver, pkString)
 }
 
-func serializeVKey(vk groth16.VerifyingKey) {
-        // Serialize verifier key for easy deserialization by verifier process
-        // Only changes once upon r1cs setup -- prover needs to be started first for proper synchronization
-        // Doesn't need to be sent on each proof message
+func SerializeVKey(vk groth16.VerifyingKey) {
+        /* Serialize verifier key for easy deserialization by verifier process
+           Only changes once upon r1cs setup -- prover needs to be started first for proper synchronization
+           Doesn't need to be sent on each proof message */
 	var keyBuf bytes.Buffer
 	vk.WriteTo(&keyBuf)
 

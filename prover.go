@@ -29,9 +29,7 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
         // Initialize "trusted setup"
-        // ProvingKey could be returned as variable or as env variable if multiple provers..
-        r1cs := setup.Initialize()
-        pk := setup.ReadPKey(true)
+        r1cs, pk := setup.Initialize()
 
 	// Continuously generate data until user aborts to showcase stream of patient data
 	for {
@@ -55,7 +53,7 @@ func main() {
 		}
 
                 req := msg.Serialize(msg.NewRequest(proof, publicWitness))
-                
+
 		// Publish proof to NATS
 		if err := nc.Publish(msg.Subject, req); err != nil {
 			log.Fatal(err)
