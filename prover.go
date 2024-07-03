@@ -35,6 +35,7 @@ func main() {
 
 	// Continuously generate data until user aborts to showcase stream of patient data
 	for {
+                time.Sleep(5 * time.Second)
                 generated, flag := circuit.Generate()
 
                 if !flag {
@@ -46,6 +47,7 @@ func main() {
 		witness, err := frontend.NewWitness(&generated, ecc.BN254.ScalarField())
 
 		if err != nil {
+                        log.Println("waka0")
 			log.Fatal(err)
 		}
 
@@ -53,7 +55,9 @@ func main() {
 		proof, err := groth16.Prove(r1cs, pk, witness)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Unable to create valid proof, since constraints not met: %v\n\n", err)
+
+                        continue
 		}
 
                 req := msg.Serialize(msg.NewRequest(proof, publicWitness))
@@ -64,8 +68,5 @@ func main() {
 		}
 
 		fmt.Println("Proof sent successfully\n")
-
-		// Periodically send proof
-		time.Sleep(5 * time.Second)
 	}
 }
