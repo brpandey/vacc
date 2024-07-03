@@ -32,6 +32,20 @@ const (
         japan
 )
 
+const dateFormat = "2006-01-02"
+
+// Define fake vaccine data and patient data schema
+type VaccineData struct {
+	Type string `faker:"oneof:measles,yellowFever"`
+	LotNumber string `faker:"cc_number"`
+        ExpDate string `faker:"date"`
+}
+
+type PatientData struct {
+	Dob string `faker:"date"`
+	MedicalRecordNum string `faker:"cc_number"`
+}
+
 
 // The goal of the circuit is to structure the data to prove with zero-knowledge
 // that a patient has had a specific vaccine without disclosing any other
@@ -54,12 +68,11 @@ type VaccineCircuit struct {
 	LotNumber        frontend.Variable
 	Dob              frontend.Variable
 	MedicalRecordNum frontend.Variable
-        MedicalRecordHash frontend.Variable `gnark:",public"` // Person id hash
-        CountryFrom      frontend.Variable `gnark:",public"` // origin country
-        CountryTo        frontend.Variable `gnark:",public"` // travel destination
+        MedicalRecordHash frontend.Variable `gnark:",public"` // Person medical ID hash
+        CountryFrom      frontend.Variable `gnark:",public"` // Origin country
+        CountryTo        frontend.Variable `gnark:",public"` // Travel destination country
 
 	VaccinatedSecret frontend.Variable
-        VaccinatedHash   frontend.Variable //`gnark:",public"`
         VaccineExpDate   frontend.Variable
 }
 
@@ -111,76 +124,36 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
 
         // Constraint #5:
         // If vaccine expiration time is not zero time and is less than now, denote that vaccine is not valid
-        nowTime := time.Now()
+        curTime := time.Now().Unix()
 
-        //        if t < time.now() && t != t.empty() => invalid vaccine
-
-        /*
-        value1 := api.Cmp(circuit.VaccineExpDate, frontend.Variable(0)) // if empty/zero time --> outcome is 0, else 1
-        value2 := api.IsZero(
-                api.Add(
-                        api.Cmp(circuit.VaccineExpDate, nowTime.Unix()),
-                        frontend.Variable(1),
-                ),
-        )
-
-        cmp := api.Cmp(circuit.VaccineExpDate, frontend.Variable(0))
-
-        api.Println("vaccineInvalid, value1", value1, circuit.VaccineExpDate, frontend.Variable(0), cmp)
-        api.Println("vaccineInvalid, value2 isZero (expDate < now) is: ", value2, circuit.VaccineExpDate, time.Now().Unix())
-        */
-
+        // If expTime != t.empty() && expTime < time.now() => invalid vaccine
         vaccineInvalid := api.And(
-                api.Cmp(circuit.VaccineExpDate, frontend.Variable(0)), // if empty/zero time --> outcome is 0, else 1
+                // If empty/zero time --> outcome is 0, else 1
+                // If outcome is 0, vaccineInvalid is automatically 0 or (valid)
+                api.Cmp(circuit.VaccineExpDate, frontend.Variable(0)),
                 api.IsZero(
                         api.Add(
-                                api.Cmp(circuit.VaccineExpDate, frontend.Variable(nowTime.Unix())),
+                                api.Cmp(circuit.VaccineExpDate, frontend.Variable(curTime)),
                                 frontend.Variable(1),
                         ),
                 ),
-                // cmp: i2 is nowTime.Unix()
+                // Add clause #2
+                // cmp: i2 is curTime
                 // cmp: if i1 < i2 => -1, with +1 => 0, else i1 > i2 => 1, then with +1 => 2, else else i1 == i2 => 0, w/ +1 => 1
-                // cmp: if outcome is 0, i1 < i2 or expDate < now, so invalid
+                // cmp: if outcome is 0, i1 < i2 or expDate < curTime, so invalid or 1
         )
 
-        api.Println("vaccine invalid past expiration?: ", vaccineInvalid)
-
-        // fail if values are the same, if vaccine is indeed invalid (1)
-        // since it is past due expiration date
+        // Fail if values are the same, if vaccine is indeed invalid (1)
+        // Since it is past due expiration date
         api.AssertIsDifferent(vaccineInvalid, isVaccinated)
 
-        // hash vaccine secret
-	mimc, _ := mimc.NewMiMC(api)
-	mimc.Write(circuit.VaccinatedSecret)
-	sum := mimc.Sum()
-	api.Println("mimc vacc sum is ", sum)
-	api.AssertIsEqual(circuit.VaccinatedHash, sum)
-
         // hash mrn
-        mimc.Reset()
-	mimc.Write(circuit.MedicalRecordNum)
-	sum = mimc.Sum()
-	api.Println("mimc mrn sum is ", sum)
+        mi, _ := mimc.NewMiMC(api)
+        mi.Write(circuit.MedicalRecordNum)
+	sum := mi.Sum()
 	api.AssertIsEqual(circuit.MedicalRecordHash, sum)
 
 	return nil
-}
-
-
-const dateFormat = "2006-01-02"
-
-// Define fake vaccine data and patient data schema
-type VaccineData struct {
-	Type string `faker:"oneof:measles,yellowFever"`
-	//	LotNumber   string `faker:"uuid_hyphenated"`
-	LotNumber string `faker:"cc_number"`
-        ExpDate string `faker:"date"`
-}
-
-type PatientData struct {
-	Dob string `faker:"date"`
-	//	MedicalRecordNum string    `faker:"uuid_hyphenated"`
-	MedicalRecordNum string `faker:"cc_number"`
 }
 
 
@@ -236,13 +209,16 @@ func Generate() (VaccineCircuit, bool) {
 
         expTime := vExp.Unix() * (int64(rand.Intn(3)) + int64(1)) // scale it up to have a slightly bigger number
 
-        if vac != vaccinated && vacType == measles {
-                log.Println("Not Vaccinated for Measles")
+        if vac != vaccinated {
                 expTime = 0 // since never vaccinated, reset exp date to zero
         }
 
+        if vac != vaccinated && vacType == measles {
+                log.Println("Not Vaccinated for Measles")
+        }
+
         if (from == ghana || target == ghana ) && vac != vaccinated && vacType == yellowFever {
-                log.Println("Yellow Fever Area and NO YellowFever Vaccine")
+                log.Println("NO YellowFever Vaccination and Yellow Fever Area")
         }
 
         if expTime < time.Now().Unix() && expTime > 0 {
@@ -251,7 +227,7 @@ func Generate() (VaccineCircuit, bool) {
 
         gen := VaccineCircuit{
                 Age:              age,
-                VaccineType:      vacType, // ignore faker data
+                VaccineType:      vacType, // ignore faker generated data
                 LotNumber:        lot,
                 Dob:              dob.Unix(),
                 MedicalRecordNum: mrn,
@@ -259,14 +235,14 @@ func Generate() (VaccineCircuit, bool) {
                 CountryFrom:      from,
                 CountryTo:    target,
                 VaccinatedSecret: vac,
-                VaccinatedHash:   hash(vac),
                 VaccineExpDate: expTime,
         }
 
-        log.Printf("Generated circuit variables %#v\n", &gen)
+        log.Printf("Generated circuit variables %+v\n", &gen)
         return gen, true
 }
 
+// Private helper to retrieve mimc value w/o need for frontend api
 func hash(data int) []byte {
 	var bigInt = big.NewInt(int64(data))
 	var bytes = bigInt.Bytes()
@@ -275,9 +251,6 @@ func hash(data int) []byte {
 	mc.Write(bytes)
 
 	hash := mc.Sum(nil)
-
-        hi := big.NewInt(0).SetBytes(hash)
-        log.Println("hash.String() is ", hi.String())
 
 	return hash
 }
