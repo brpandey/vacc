@@ -20,7 +20,8 @@ func Initialize() (constraint.ConstraintSystem, groth16.ProvingKey) {
         // Define vaccine circuit
         var circ circuit.VaccineCircuit
 
-        // Compile the circuit to a R1CS (Rank-1 Constraint System) using Groth16 backend
+        // Compile the circuit from the high level DSL specifying the proof's logic
+        // to a R1CS (Rank-1 Constraint System) using Groth16 backend
         r1cs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circ)
 
         if err != nil {

@@ -1,3 +1,5 @@
+/// Prover generates zk-SNARK proof that person is vaccinated without revealing personal secret data
+
 package main
 
 import (
@@ -39,6 +41,8 @@ func main() {
                         continue
                 }
 
+                // Generate a witness from the generated circuit which contains some randomness
+                // and satisfies the equations of the circuit
 		witness, err := frontend.NewWitness(&generated, ecc.BN254.ScalarField())
 
 		if err != nil {

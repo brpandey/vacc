@@ -1,3 +1,7 @@
+/// Verifier receives proof requests asynchronously from the prover
+/// authenticates the proof for their validity without need personal data access
+/// Optional TODO: Communicates verification result back to prover
+
 package main
 
 import (
@@ -28,12 +32,16 @@ func main() {
 	nc.Subscribe(msg.Subject, func(message *nats.Msg) {
                 proof, witness := msg.Deserialize(message.Data)
 
+                // Run the circuit along with the provided witness to verify that
+                // the circuit equations pass muster.  If verification succeeds,
+                // the user must have a valid vaccination
                 if err := groth16.Verify(proof, vk, witness); err != nil {
-                        fmt.Println("Proof verification failed:", err)
+                        fmt.Printf("Proof verification failed %v, patient doesn't have an active vaccination", err)
                         return
                 }
 
-                fmt.Println("Proof verified successfully\n")
+                // E.g. Grant access to services
+                fmt.Println("Proof verified successfully, patient passed vaccine authentication\n")
 	})
 
 	fmt.Printf("Awaiting vaccine proofs to be verified \n")
