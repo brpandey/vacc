@@ -1,6 +1,13 @@
 # Travel vaccines
 
-Zero knowledge Proofs using Gnark, Golang, and ECC BN254
+![ECC](https://github.com/brpandey/vacc/blob/main/ecc.jpg?raw=true)
+
+> Zero knowledge Proofs using Gnark, Golang, ECC BN254 and Nats for messaging between provers and verifier
+
+> Illustrates travel vaccine verification uisng multiple prover workers to generate proofs
+> and verify them by a verifier without leaking any sensitive personal data
+
+![WALDO](https://github.com/brpandey/vacc/blob/main/waldo.jpeg?raw=true)
 
 ```go
 # Prover
