@@ -11,6 +11,47 @@
 > Illustrates travel vaccine verification uisng multiple prover workers to generate proofs
 > and verify them by a verifier without leaking any sensitive personal data
 
+
+In a simple example, a circuit could model this mathematical equation: x^3 + x + 5 == y
+'x' would be the secret field, and 'y' the public field
+
+```rust
+// CubicCircuit defines a simple circuit
+type CubicCircuit struct {
+	X frontend.Variable `gnark:"x"` // secret
+	Y frontend.Variable `gnark:",public"`
+}
+
+// Define declares the circuit constraints for the simple circuit:
+// x**3 + x + 5 == y
+func (circuit *CubicCircuit) Define(api frontend.API) error {
+	x3 := api.Mul(circuit.X, circuit.X, circuit.X)
+	api.AssertIsEqual(circuit.Y, api.Add(x3, circuit.X, 5))
+	return nil
+}
+```
+
+Without defining a literal equation as above, one can still follow the same idea 
+by keeping both secret and public fields and with a set of customized logical constraints / rules 
+to receive the same benefits of (private sign-public verify) signature based cryptography. 
+See below for a new circuit definition
+
+> The declared circuit fields and constraints get compiled into an arithmetic rank-1 constraint system over 
+> a BN254 elliptic curve which can be used to generate proving and verifying keys.
+> The secret fields are intractable to compute outside the prover akin to the discrete-logarithm problem  
+> (e.g Diffie-Hellman key exchange) set in a different context
+
+The Diffie-Hellman key exchange follows with parameters: 
+1) a large prime p, 2) a generator some integer g, 
+3) the private key x, 4) and the public key being: y = g^x mod p
+
+This is equivalent to multiplying g by itself x times
+
+> In ECC, the private key is some integer x, and the public key is Y = x * G. 
+> This is equivalent to adding the generator G to itself x times, or 'dot'-ing points together on an eliptic curve x times
+> In both cases, obtaining y or Y from x is easy, but obtaining x (the secret) from y or Y follows to be intractable
+> => Elliptic Curves permit much shorter public keys along with more efficient calculation in comparison to their classic counterparts
+
 ```rust
 // Construct circuit's constraints
 func (circuit *VaccineCircuit) Define(api frontend.API) error {
@@ -60,7 +101,7 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
         api.AssertIsLessOrEqual(circuit.Age, frontend.Variable(100))
 
         // Constraint #4:
-	// Verify that vaccineType is "measles", or "yellow fever"
+	    // Verify that vaccineType is "measles", or "yellow fever"
         api.AssertIsLessOrEqual(circuit.VaccineType, frontend.Variable(yellowFever))
 
         // Constraint #5:
