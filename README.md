@@ -1,80 +1,133 @@
-# Travel vaccines
+# Travel vaccine
+## Vaccine verification using ZK Proofs
 
-![ECC](https://github.com/brpandey/vacc/blob/main/ecc.jpg?raw=true)
+![WALDO](https://github.com/brpandey/vacc/blob/main/waldo.jpeg?raw=true)
+
 
 > Zero knowledge Proofs using Gnark, Golang, ECC BN254 and Nats for messaging between provers and verifier
+
+![ECC](https://github.com/brpandey/vacc/blob/main/ecc.jpg?raw=true)
 
 > Illustrates travel vaccine verification uisng multiple prover workers to generate proofs
 > and verify them by a verifier without leaking any sensitive personal data
 
-![WALDO](https://github.com/brpandey/vacc/blob/main/waldo.jpeg?raw=true)
+```rust
+// Construct circuit's constraints
+func (circuit *VaccineCircuit) Define(api frontend.API) error {
+        // Note: Cmp returns 1 if i1>i2, 0 if i1=i2, -1 if i1<i2
+        meVaccineType := api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(measles)))
+        api.AssertIsBoolean(meVaccineType)
 
-```go
-# Prover
+        // Constraint #1: if type is measles, must be vaccinated for it
+        // if specified vaccine is not measles, assume successful measles vaccination
+	    measlesVaccinated := api.Select(
+                meVaccineType,
+                api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret)), // is vaccinated?
+                frontend.Variable(1),
+        )
 
-$ go run prover.go 
-16:07:37 INF compiling circuit
-16:07:37 INF parsed circuit inputs nbPublic=5 nbSecret=5
-16:07:37 INF building constraint builder nbConstraints=29998
-2024/07/03 16:08:00 Generated circuit variables &{Age:6 VaccineType:1 LotNumber:3548539675025022 Dob:1528329600 MedicalRecordNum:3558008676398087 MedicalRecordHash:[4 175 231 199 184 37 92 5 245 141 138 142 146 212 50 42 57 8 94 216 52 46 121 70 40 195 110 56 183 2 67 175] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:4941907200}
-16:08:00 DBG constraint system solver done nbConstraints=29998 took=39.679572
-16:08:01 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=29998 took=847.634652
-Proof sent successfully
+        api.AssertIsBoolean(measlesVaccinated)
+        api.AssertIsEqual(measlesVaccinated, frontend.Variable(1))
 
-2024/07/03 16:08:06 Vaccine expiration time has expired!
-2024/07/03 16:08:06 Generated circuit variables &{Age:41 VaccineType:1 LotNumber:3528250638415605 Dob:412041600 MedicalRecordNum:3588510416991014 MedicalRecordHash:[12 10 97 59 218 83 125 29 206 161 163 184 27 227 14 152 83 53 229 203 93 123 129 174 32 0 145 204 209 156 108 158] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:1619740800}
-16:08:06 ERR error="constraint #29666 is not satisfied: 0 ⋅ 0 != 1" nbConstraints=29998
-2024/07/03 16:08:06 Unable to create valid proof, since constraints not met: constraint #29666 is not satisfied: 0 ⋅ 0 != 1
+        // Constraint #2:
+        // If travelers who are coming from or going to a country
+        // prone to Yellow Fever transmission (ghana), they must be vaccinated against YF
 
-2024/07/03 16:08:11 Vaccine expiration time has expired!
-2024/07/03 16:08:11 Generated circuit variables &{Age:40 VaccineType:1 LotNumber:3528050902294490 Dob:442540800 MedicalRecordNum:3578238298525846 MedicalRecordHash:[30 103 206 102 55 183 23 253 90 174 165 196 45 159 97 150 225 171 252 232 170 65 84 90 110 63 254 113 127 58 30 216] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:668390400}
-16:08:11 ERR error="constraint #29666 is not satisfied: 0 ⋅ 0 != 1" nbConstraints=29998
-2024/07/03 16:08:11 Unable to create valid proof, since constraints not met: constraint #29666 is not satisfied: 0 ⋅ 0 != 1
+        // Active yellow fever situation, if coming or going to Ghana, and if vaccineType is yellowFever
+        // if vaccineType is not yellowFever, assume active country status is irrelevant or 0..
+        yfVaccineType := api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(yellowFever)))
+        yfActiveCountry :=
+                api.And(
+                        api.Or( // countries: ghana 0, sriLanka 1, japan 2
+                                api.IsZero(api.Cmp(circuit.CountryFrom, frontend.Variable(ghana))),
+                                api.IsZero(api.Cmp(circuit.CountryTo, frontend.Variable(ghana))),
+                        ),
+                        yfVaccineType,
+                )
 
-2024/07/03 16:08:16 Generated circuit variables &{Age:51 VaccineType:1 LotNumber:3568086344271599 Dob:105321600 MedicalRecordNum:3558793954915690 MedicalRecordHash:[9 107 17 91 177 191 108 87 172 80 122 188 133 14 65 177 247 199 186 157 85 66 207 128 27 177 247 155 233 219 227 253] CountryFrom:2 CountryTo:1 VaccinatedSecret:2 VaccineExpDate:0}
-16:08:16 DBG constraint system solver done nbConstraints=29998 took=42.230534
-16:08:17 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=29998 took=851.085285
-Proof sent successfully
+        // Check if vaccinated for yellow fever
+        yfActiveVaccine := api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret))
 
-2024/07/03 16:08:22 Vaccine expiration time has expired!
-2024/07/03 16:08:22 Generated circuit variables &{Age:52 VaccineType:1 LotNumber:3548421592885792 Dob:64022400 MedicalRecordNum:3548294835230835 MedicalRecordHash:[40 246 21 122 85 111 205 80 52 216 86 40 79 230 36 122 45 77 19 95 30 10 190 19 161 29 111 65 41 241 48 232] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:1399852800}
-16:08:22 ERR error="constraint #29666 is not satisfied: 0 ⋅ 0 != 1" nbConstraints=29998
-2024/07/03 16:08:22 Unable to create valid proof, since constraints not met: constraint #29666 is not satisfied: 0 ⋅ 0 != 1
+        // if the travel routes are to / from ghana and there's no record of yf vaccination mark as risk
+        // if active is true && no active yf vaccine => yellow fever risk
 
-2024/07/03 16:08:27 NO YellowFever Vaccination and Yellow Fever Area
-2024/07/03 16:08:27 Generated circuit variables &{Age:46 VaccineType:1 LotNumber:3538173771564262 Dob:248140800 MedicalRecordNum:3588954891235229 MedicalRecordHash:[6 160 249 227 7 134 11 47 170 224 164 38 135 71 28 54 66 12 47 128 79 85 172 190 84 114 17 72 46 247 245 51] CountryFrom:1 CountryTo:0 VaccinatedSecret:2 VaccineExpDate:0}
-16:08:27 DBG constraint system solver done nbConstraints=29998 took=42.682695
-16:08:28 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=29998 took=889.820438
-Proof sent successfully
+        yfRisk := api.Select(yfActiveCountry, api.IsZero(yfActiveVaccine), frontend.Variable(0))
+        api.AssertIsBoolean(yfRisk)
+        api.AssertIsEqual(yfRisk, frontend.Variable(0))
 
-2024/07/03 16:08:33 Vaccine expiration time has expired!
-2024/07/03 16:08:33 Generated circuit variables &{Age:22 VaccineType:0 LotNumber:3538016561847154 Dob:1010102400 MedicalRecordNum:3548949187923884 MedicalRecordHash:[32 49 195 37 61 158 154 36 37 4 44 133 126 233 82 234 37 230 192 90 192 141 226 176 50 231 181 173 213 213 37 95] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:650764800}
-16:08:33 ERR error="constraint #29666 is not satisfied: 0 ⋅ 0 != 1" nbConstraints=29998
-2024/07/03 16:08:33 Unable to create valid proof, since constraints not met: constraint #29666 is not satisfied: 0 ⋅ 0 != 1
+        // Constraint #3:
+        // Verify the person is of traveling age
+        api.AssertIsLessOrEqual(circuit.Age, frontend.Variable(100))
 
-2024/07/03 16:08:38 NO YellowFever Vaccination and Yellow Fever Area
-2024/07/03 16:08:38 Generated circuit variables &{Age:27 VaccineType:1 LotNumber:3558065434408548 Dob:857520000 MedicalRecordNum:3558269649739911 MedicalRecordHash:[4 63 84 136 246 36 249 247 244 186 69 95 54 145 114 92 119 105 139 141 74 234 132 27 45 237 222 87 87 252 43 126] CountryFrom:2 CountryTo:0 VaccinatedSecret:2 VaccineExpDate:0}
-16:08:38 DBG constraint system solver done nbConstraints=29998 took=50.343945
-16:08:39 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=29998 took=885.170638
-Proof sent successfully
+        // Constraint #4:
+	// Verify that vaccineType is "measles", or "yellow fever"
+        api.AssertIsLessOrEqual(circuit.VaccineType, frontend.Variable(yellowFever))
 
+        // Constraint #5:
+        // If vaccine expiration time is not zero time and is less than now, denote that vaccine is not valid
+        curTime := time.Now().Unix()
+
+        // if never vaccinated, time will be 0, expired status only applies to if was previously vaccinated
+        // If expTime != t.empty() && expTime < time.now() => invalid vaccine
+        vaccineExpired := api.And(
+                // If empty/zero time --> outcome is 0, else 1
+                // If outcome is 0, vaccineExpired is automatically 0 or (valid)
+                api.Cmp(circuit.VaccineExpDate, frontend.Variable(0)),
+                api.IsZero(
+                        api.Add(
+                                api.Cmp(circuit.VaccineExpDate, frontend.Variable(curTime)),
+                                frontend.Variable(1),
+                        ),
+                ),
+                // Add clause #2
+                // cmp: i2 is curTime
+                // cmp: if i1 < i2 => -1, with +1 => 0, else i1 > i2 => 1, then with +1 => 2, else else i1 == i2 => 0, w/ +1 => 1
+                // cmp: if outcome is 0, i1 < i2 or expDate < curTime, so invalid or 1
+        )
+
+        // safeguard, vaccine expired state matters only if vaccinated
+        vaccineExpired = api.And(
+                vaccineExpired,
+                api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret)))
+
+        // Fail if values are the same, if vaccine is indeed invalid (1)
+        // Since it is past due expiration date
+        api.AssertIsEqual(vaccineExpired, frontend.Variable(0))
+
+        // hash mrn
+        mi, _ := mimc.NewMiMC(api)
+        mi.Write(circuit.MedicalRecordNum)
+	sum := mi.Sum()
+	api.AssertIsEqual(circuit.MedicalRecordHash, sum)
+
+	return nil
+}
 ```
 
 
-```go
-# Verifier
+```haskell
+# See prover.log
 
-$ go run verifier.go 
-Awaiting vaccine proofs to be verified 
-16:08:01 DBG verifier done backend=groth16 curve=bn254 took=6.195128
-Proof verified successfully, patient passed vaccine authentication
+2024/07/04 18:53:34 [NEW] traveler &{Age:43 VaccineType:1 LotNumber:376503936263800 Dob:339120000 MedicalRecordNum:343664090834775 MedicalRecordHash:[1 122 128 147 216 145 131 178 86 107 176 131 29 150 250 70 40 110 25 192 65 198 185 220 200 200 184 44 178 163 125 106] CountryFrom:1 CountryTo:2 VaccinatedSecret:0 VaccineExpDate:0}
+18:53:34 DBG constraint system solver done nbConstraints=33556 took=57.245394
+18:53:35 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1675.115905
+[OK] Proof sent successfully
 
-16:08:17 DBG verifier done backend=groth16 curve=bn254 took=4.3031
-Proof verified successfully, patient passed vaccine authentication
+2024/07/04 18:53:39 [!!] Vaccine expiration time has expired!
+2024/07/04 18:53:39 [NEW] traveler &{Age:10 VaccineType:1 LotNumber:348367540237593 Dob:1389571200 MedicalRecordNum:376894624500803 MedicalRecordHash:[39 75 3 159 205 21 223 79 60 185 2 252 222 27 60 204 200 171 178 228 211 246 210 200 208 155 87 158 142 77 51 135] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:1645574400}
+18:53:39 ERR error="constraint #33224 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:53:39 [X] Constraints not met, unable to create valid proof: constraint #33224 is not satisfied: 1 ⋅ 1 != 0
 
-16:08:28 DBG verifier done backend=groth16 curve=bn254 took=3.826664
-Proof verified successfully, patient passed vaccine authentication
+2024/07/04 18:53:44 [!!] No YellowFever Vaccination and from/to Yellow Fever Area
+2024/07/04 18:53:44 [NEW] traveler &{Age:45 VaccineType:1 LotNumber:371864288485165 Dob:270345600 MedicalRecordNum:373531245071625 MedicalRecordHash:[0 245 28 207 54 75 10 252 120 198 56 69 167 141 70 43 255 166 168 237 249 238 123 111 99 236 203 176 84 6 113 104] CountryFrom:0 CountryTo:1 VaccinatedSecret:0 VaccineExpDate:0}
+18:53:44 ERR error="constraint #21339 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:53:44 [X] Constraints not met, unable to create valid proof: constraint #21339 is not satisfied: 1 ⋅ 1 != 0
+```
 
-16:08:39 DBG verifier done backend=groth16 curve=bn254 took=4.183551
-Proof verified successfully, patient passed vaccine authentication
+
+```haskell
+# See verifier.log
+
+18:53:35 DBG verifier done backend=groth16 curve=bn254 took=7.896169
+[Ok] Proof verified successfully, traveler passed authentication
 ```

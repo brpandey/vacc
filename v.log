@@ -1,0 +1,113 @@
+$ go run verifier.go 
+
+Awaiting travel vaccine proofs to be verified
+
+18:49:40 DBG verifier done backend=groth16 curve=bn254 took=4.814886
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:49:45 DBG verifier done backend=groth16 curve=bn254 took=7.56325
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:49:50 DBG verifier done backend=groth16 curve=bn254 took=5.974108
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:00 DBG verifier done backend=groth16 curve=bn254 took=6.828894
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:10 DBG verifier done backend=groth16 curve=bn254 took=6.559548
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:15 DBG verifier done backend=groth16 curve=bn254 took=5.318363
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:20 DBG verifier done backend=groth16 curve=bn254 took=7.780968
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:25 DBG verifier done backend=groth16 curve=bn254 took=4.340975
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:35 DBG verifier done backend=groth16 curve=bn254 took=4.906946
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:40 DBG verifier done backend=groth16 curve=bn254 took=5.284553
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:45 DBG verifier done backend=groth16 curve=bn254 took=5.577359
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:50 DBG verifier done backend=groth16 curve=bn254 took=6.390326
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:50:55 DBG verifier done backend=groth16 curve=bn254 took=5.277376
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:51:05 DBG verifier done backend=groth16 curve=bn254 took=6.517965
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:51:10 DBG verifier done backend=groth16 curve=bn254 took=4.982301
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:51:35 DBG verifier done backend=groth16 curve=bn254 took=5.702107
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:51:40 DBG verifier done backend=groth16 curve=bn254 took=6.04411
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:51:45 DBG verifier done backend=groth16 curve=bn254 took=4.328287
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:51:50 DBG verifier done backend=groth16 curve=bn254 took=4.596135
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:00 DBG verifier done backend=groth16 curve=bn254 took=4.934805
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:05 DBG verifier done backend=groth16 curve=bn254 took=6.29264
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:10 DBG verifier done backend=groth16 curve=bn254 took=4.635923
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:15 DBG verifier done backend=groth16 curve=bn254 took=5.033934
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:20 DBG verifier done backend=groth16 curve=bn254 took=6.59853
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:30 DBG verifier done backend=groth16 curve=bn254 took=5.777931
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:35 DBG verifier done backend=groth16 curve=bn254 took=6.920986
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:40 DBG verifier done backend=groth16 curve=bn254 took=5.272391
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:45 DBG verifier done backend=groth16 curve=bn254 took=4.861243
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:50 DBG verifier done backend=groth16 curve=bn254 took=6.25795
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:52:55 DBG verifier done backend=groth16 curve=bn254 took=6.772146
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:53:05 DBG verifier done backend=groth16 curve=bn254 took=5.843891
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:53:10 DBG verifier done backend=groth16 curve=bn254 took=5.647537
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:53:15 DBG verifier done backend=groth16 curve=bn254 took=6.875234
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:53:20 DBG verifier done backend=groth16 curve=bn254 took=4.479409
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:53:25 DBG verifier done backend=groth16 curve=bn254 took=7.122547
+[Ok] Proof verified successfully, traveler passed authentication
+
+18:53:35 DBG verifier done backend=groth16 curve=bn254 took=7.896169
+[Ok] Proof verified successfully, traveler passed authentication
+
+

@@ -1,0 +1,254 @@
+$ go run prover.go 
+18:49:09 INF compiling circuit
+18:49:09 INF parsed circuit inputs nbPublic=5 nbSecret=5
+18:49:10 INF building constraint builder nbConstraints=33556
+
+2024/07/04 18:49:38 [NEW] traveler &{Age:34 VaccineType:1 LotNumber:344006155167883 Dob:646012800 MedicalRecordNum:345087393427887 MedicalRecordHash:[23 43 202 69 89 16 183 128 203 221 252 2 147 93 163 242 68 40 53 159 67 242 148 47 212 123 97 77 99 48 11 167] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:5563561778}
+18:49:38 DBG constraint system solver done nbConstraints=33556 took=50.642861
+18:49:40 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1582.289308
+[OK] Proof sent successfully
+
+2024/07/04 18:49:43 [NEW] traveler &{Age:7 VaccineType:1 LotNumber:376496840931755 Dob:1484352000 MedicalRecordNum:342556742389715 MedicalRecordHash:[34 246 92 92 163 187 89 175 5 251 48 145 141 84 199 46 121 34 241 77 244 37 177 64 137 247 147 90 50 166 31 148] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:3820700983}
+18:49:43 DBG constraint system solver done nbConstraints=33556 took=46.706908
+18:49:45 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1540.964563
+[OK] Proof sent successfully
+
+2024/07/04 18:49:48 [NEW] traveler &{Age:7 VaccineType:1 LotNumber:372426132727811 Dob:1469145600 MedicalRecordNum:372090073956217 MedicalRecordHash:[18 217 129 118 149 130 61 233 67 195 84 21 34 3 242 245 102 196 138 223 71 1 14 151 107 27 10 233 227 13 78 27] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:4105820988}
+18:49:48 DBG constraint system solver done nbConstraints=33556 took=45.990743
+18:49:50 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1592.540466
+[OK] Proof sent successfully
+
+2024/07/04 18:49:53 [!!] Not Vaccinated for Measles
+2024/07/04 18:49:53 [NEW] traveler &{Age:41 VaccineType:0 LotNumber:371089122517818 Dob:414115200 MedicalRecordNum:378288542683740 MedicalRecordHash:[9 35 249 84 145 243 177 226 121 123 103 248 116 107 126 141 26 236 92 50 214 85 218 68 195 16 136 62 107 175 24 12] CountryFrom:1 CountryTo:2 VaccinatedSecret:0 VaccineExpDate:0}
+18:49:53 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:49:53 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:49:58 [NEW] traveler &{Age:24 VaccineType:1 LotNumber:373592194723397 Dob:956448000 MedicalRecordNum:377772546210420 MedicalRecordHash:[6 197 25 234 37 128 102 242 136 191 87 76 117 108 231 188 233 225 82 51 119 102 236 86 183 40 84 246 119 225 166 194] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:3432246598}
+18:49:58 DBG constraint system solver done nbConstraints=33556 took=48.653064
+18:50:00 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1657.251645
+[OK] Proof sent successfully
+
+2024/07/04 18:50:03 [!!] Not Vaccinated for Measles
+2024/07/04 18:50:03 [NEW] traveler &{Age:16 VaccineType:0 LotNumber:378670573904321 Dob:1195171200 MedicalRecordNum:378759439117843 MedicalRecordHash:[12 73 21 107 2 9 172 149 188 35 69 27 12 234 1 152 133 54 176 171 226 207 166 236 25 141 126 122 111 91 243 221] CountryFrom:1 CountryTo:0 VaccinatedSecret:0 VaccineExpDate:0}
+18:50:03 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:50:03 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:50:08 [NEW] traveler &{Age:3 VaccineType:0 LotNumber:378402376655531 Dob:1599868800 MedicalRecordNum:378571870441987 MedicalRecordHash:[11 32 65 155 201 54 92 145 188 91 93 137 194 250 22 232 157 105 112 189 170 35 70 171 238 59 29 0 89 132 31 175] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:8168694608}
+18:50:08 DBG constraint system solver done nbConstraints=33556 took=53.368247
+18:50:10 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1741.912668
+[OK] Proof sent successfully
+
+2024/07/04 18:50:13 [NEW] traveler &{Age:30 VaccineType:0 LotNumber:375793621592171 Dob:773884800 MedicalRecordNum:374389891322979 MedicalRecordHash:[44 250 78 116 101 168 211 173 202 227 239 101 159 53 163 72 18 72 112 118 120 115 141 218 96 116 59 47 157 108 121 83] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:4993840213}
+18:50:13 DBG constraint system solver done nbConstraints=33556 took=43.99088
+18:50:15 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1691.830582
+[OK] Proof sent successfully
+
+2024/07/04 18:50:18 [NEW] traveler &{Age:38 VaccineType:1 LotNumber:340626967083513 Dob:502934400 MedicalRecordNum:373326224087840 MedicalRecordHash:[14 22 82 70 54 29 78 193 86 192 70 207 178 148 66 63 193 214 162 159 140 242 107 81 159 201 19 202 132 219 185 218] CountryFrom:1 CountryTo:2 VaccinatedSecret:0 VaccineExpDate:0}
+18:50:18 DBG constraint system solver done nbConstraints=33556 took=50.169836
+18:50:20 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1634.673041
+[OK] Proof sent successfully
+
+2024/07/04 18:50:23 [NEW] traveler &{Age:17 VaccineType:1 LotNumber:341802247102160 Dob:1158451200 MedicalRecordNum:375688535963553 MedicalRecordHash:[21 248 140 6 194 222 116 61 67 220 80 87 15 227 145 122 106 209 178 43 245 121 133 36 170 40 158 113 82 220 138 76] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:4712521823}
+18:50:23 DBG constraint system solver done nbConstraints=33556 took=49.480461
+18:50:25 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1733.549523
+[OK] Proof sent successfully
+
+2024/07/04 18:50:28 [!!] Not Vaccinated for Measles
+2024/07/04 18:50:28 [NEW] traveler &{Age:18 VaccineType:0 LotNumber:374499220969138 Dob:1126310400 MedicalRecordNum:348259692025221 MedicalRecordHash:[31 23 150 153 227 176 102 161 19 68 32 223 102 151 211 22 254 77 171 216 198 161 184 127 1 145 221 165 173 1 98 128] CountryFrom:0 CountryTo:2 VaccinatedSecret:0 VaccineExpDate:0}
+18:50:28 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:50:28 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:50:33 [NEW] traveler &{Age:40 VaccineType:0 LotNumber:374907656820323 Dob:453254400 MedicalRecordNum:373575013842469 MedicalRecordHash:[39 29 22 33 136 73 147 217 39 68 252 41 198 33 29 92 13 2 109 96 88 223 35 167 233 135 240 144 186 74 75 250] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:3358115433}
+18:50:33 DBG constraint system solver done nbConstraints=33556 took=45.021641
+18:50:35 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1687.565879
+[OK] Proof sent successfully
+
+2024/07/04 18:50:38 [NEW] traveler &{Age:39 VaccineType:1 LotNumber:378597085798293 Dob:463449600 MedicalRecordNum:377692479906419 MedicalRecordHash:[41 222 250 36 2 231 66 104 150 29 45 66 82 40 23 3 129 101 143 213 193 147 78 105 220 14 151 131 77 4 101 13] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:4364502638}
+18:50:38 DBG constraint system solver done nbConstraints=33556 took=47.867162
+18:50:40 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1642.956741
+[OK] Proof sent successfully
+
+2024/07/04 18:50:43 [NEW] traveler &{Age:40 VaccineType:1 LotNumber:340272431977082 Dob:430963200 MedicalRecordNum:343054186379208 MedicalRecordHash:[13 70 155 27 231 29 26 149 122 144 155 199 181 201 185 119 34 57 205 184 10 10 251 67 8 28 161 241 141 174 203 211] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:2786493043}
+18:50:43 DBG constraint system solver done nbConstraints=33556 took=45.139603
+18:50:45 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1688.845682
+[OK] Proof sent successfully
+
+2024/07/04 18:50:48 [NEW] traveler &{Age:33 VaccineType:0 LotNumber:343883647523463 Dob:661996800 MedicalRecordNum:342044676590786 MedicalRecordHash:[21 25 216 16 90 67 153 111 32 5 155 254 151 238 251 184 194 169 160 27 226 141 58 23 173 254 129 131 22 255 184 136] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:7841757048}
+18:50:48 DBG constraint system solver done nbConstraints=33556 took=47.179744
+18:50:50 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1656.575089
+[OK] Proof sent successfully
+
+2024/07/04 18:50:53 [NEW] traveler &{Age:1 VaccineType:0 LotNumber:342091480259096 Dob:1676160000 MedicalRecordNum:343357120653275 MedicalRecordHash:[20 194 240 230 238 119 5 124 24 104 254 154 13 99 176 210 11 126 29 129 18 38 204 213 78 175 9 66 246 210 42 177] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:4542573053}
+18:50:53 DBG constraint system solver done nbConstraints=33556 took=46.887505
+18:50:55 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1838.983098
+[OK] Proof sent successfully
+
+2024/07/04 18:50:58 [!!] Not Vaccinated for Measles
+2024/07/04 18:50:58 [NEW] traveler &{Age:33 VaccineType:0 LotNumber:379122444084472 Dob:674524800 MedicalRecordNum:347736409111846 MedicalRecordHash:[36 71 137 177 243 223 79 247 24 236 68 103 38 191 218 123 90 242 131 7 222 10 69 106 9 71 139 213 96 255 209 102] CountryFrom:1 CountryTo:0 VaccinatedSecret:0 VaccineExpDate:0}
+18:50:58 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:50:58 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:51:03 [NEW] traveler &{Age:31 VaccineType:0 LotNumber:344598610378045 Dob:723686400 MedicalRecordNum:343660156950736 MedicalRecordHash:[1 85 80 212 15 47 13 67 226 137 221 35 252 171 161 184 232 123 226 86 200 152 236 74 54 84 99 185 238 38 249 91] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:5073155463}
+18:51:03 DBG constraint system solver done nbConstraints=33556 took=50.804619
+18:51:05 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1737.065609
+[OK] Proof sent successfully
+
+2024/07/04 18:51:08 [NEW] traveler &{Age:30 VaccineType:0 LotNumber:343607108333749 Dob:750988800 MedicalRecordNum:345983139866138 MedicalRecordHash:[13 105 27 40 39 223 219 206 45 81 110 219 131 180 62 179 136 44 69 240 126 50 63 235 231 72 31 164 126 215 42 187] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:3094163468}
+18:51:08 DBG constraint system solver done nbConstraints=33556 took=45.652835
+18:51:10 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1692.821845
+[OK] Proof sent successfully
+
+2024/07/04 18:51:13 [!!] No YellowFever Vaccination and from/to Yellow Fever Area
+2024/07/04 18:51:13 [NEW] traveler &{Age:51 VaccineType:1 LotNumber:345882384860097 Dob:104198400 MedicalRecordNum:371025294192030 MedicalRecordHash:[37 253 211 151 34 230 116 55 25 21 196 88 165 226 25 219 26 143 97 84 196 64 46 5 244 243 87 74 33 103 161 124] CountryFrom:2 CountryTo:0 VaccinatedSecret:0 VaccineExpDate:0}
+18:51:13 ERR error="constraint #21339 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:51:13 [X] Constraints not met, unable to create valid proof: constraint #21339 is not satisfied: 1 ⋅ 1 != 0
+
+2024/07/04 18:51:18 [!!] Vaccine expiration time has expired!
+2024/07/04 18:51:18 [NEW] traveler &{Age:3 VaccineType:0 LotNumber:340277773235855 Dob:1611878400 MedicalRecordNum:377805918001405 MedicalRecordHash:[0 168 12 124 192 170 54 202 34 240 219 83 57 143 243 235 162 234 198 51 167 59 23 245 156 21 197 76 161 86 189 23] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:160876800}
+18:51:18 ERR error="constraint #33224 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:51:18 [X] Constraints not met, unable to create valid proof: constraint #33224 is not satisfied: 1 ⋅ 1 != 0
+
+2024/07/04 18:51:23 [!!] Vaccine expiration time has expired!
+2024/07/04 18:51:23 [NEW] traveler &{Age:25 VaccineType:1 LotNumber:349671152456478 Dob:914025600 MedicalRecordNum:371401366176642 MedicalRecordHash:[24 178 190 218 132 35 3 231 130 132 209 145 128 103 227 61 153 85 136 252 213 61 177 27 175 160 4 13 127 242 73 249] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:1683417600}
+18:51:23 ERR error="constraint #33224 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:51:23 [X] Constraints not met, unable to create valid proof: constraint #33224 is not satisfied: 1 ⋅ 1 != 0
+
+2024/07/04 18:51:28 [!!] Not Vaccinated for Measles
+2024/07/04 18:51:28 [NEW] traveler &{Age:18 VaccineType:0 LotNumber:374820007237716 Dob:1138579200 MedicalRecordNum:341448363299511 MedicalRecordHash:[23 152 109 93 83 221 12 228 7 34 108 60 40 148 11 200 122 51 136 191 191 81 230 109 88 45 123 126 209 67 82 135] CountryFrom:2 CountryTo:1 VaccinatedSecret:0 VaccineExpDate:0}
+18:51:28 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:51:28 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:51:33 [NEW] traveler &{Age:37 VaccineType:0 LotNumber:371527736116412 Dob:550195200 MedicalRecordNum:370653087985612 MedicalRecordHash:[32 99 105 25 254 132 175 41 213 201 253 140 165 20 102 3 243 144 170 150 87 85 122 123 199 182 154 251 13 99 0 242] CountryFrom:1 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:4818102693}
+18:51:33 DBG constraint system solver done nbConstraints=33556 took=56.78497
+18:51:35 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1654.339721
+[OK] Proof sent successfully
+
+2024/07/04 18:51:38 [NEW] traveler &{Age:36 VaccineType:1 LotNumber:373801554263819 Dob:580780800 MedicalRecordNum:372140098574271 MedicalRecordHash:[24 21 147 79 180 98 251 95 231 250 1 95 73 156 229 41 112 105 99 150 48 246 12 57 16 172 78 97 151 60 213 169] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:1880675498}
+18:51:38 DBG constraint system solver done nbConstraints=33556 took=46.942163
+18:51:40 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1699.898645
+[OK] Proof sent successfully
+
+2024/07/04 18:51:43 [NEW] traveler &{Age:15 VaccineType:0 LotNumber:377138720035128 Dob:1219276800 MedicalRecordNum:347216739294577 MedicalRecordHash:[25 150 68 18 254 159 141 237 23 129 49 158 87 216 146 27 21 123 6 234 1 168 43 183 243 208 34 105 112 227 242 174] CountryFrom:1 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:6895158703}
+18:51:43 DBG constraint system solver done nbConstraints=33556 took=47.44025
+18:51:45 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1756.757332
+[OK] Proof sent successfully
+
+2024/07/04 18:51:48 [NEW] traveler &{Age:22 VaccineType:0 LotNumber:371130731854669 Dob:1001030400 MedicalRecordNum:342952257551904 MedicalRecordHash:[47 136 25 170 107 88 147 231 229 167 136 192 238 212 30 165 229 235 152 52 168 248 5 123 5 11 239 123 71 208 153 179] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:6528131508}
+18:51:48 DBG constraint system solver done nbConstraints=33556 took=45.107719
+18:51:50 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1694.592108
+[OK] Proof sent successfully
+
+2024/07/04 18:51:53 [!!] No YellowFever Vaccination and from/to Yellow Fever Area
+2024/07/04 18:51:53 [NEW] traveler &{Age:10 VaccineType:1 LotNumber:342615191896871 Dob:1404518400 MedicalRecordNum:345153285279177 MedicalRecordHash:[2 202 252 61 227 35 186 77 225 200 159 110 117 229 164 203 126 209 221 151 208 148 150 173 224 120 87 171 5 104 215 51] CountryFrom:0 CountryTo:1 VaccinatedSecret:0 VaccineExpDate:0}
+18:51:53 ERR error="constraint #21339 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:51:53 [X] Constraints not met, unable to create valid proof: constraint #21339 is not satisfied: 1 ⋅ 1 != 0
+
+2024/07/04 18:51:58 [NEW] traveler &{Age:5 VaccineType:0 LotNumber:378575368029509 Dob:1547510400 MedicalRecordNum:372684541917329 MedicalRecordHash:[39 21 215 202 239 206 23 213 59 125 180 233 208 46 136 244 108 20 107 10 41 37 69 87 63 213 184 180 36 194 101 38] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:3363472318}
+18:51:58 DBG constraint system solver done nbConstraints=33556 took=48.211842
+18:52:00 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1692.719651
+[OK] Proof sent successfully
+
+2024/07/04 18:52:03 [NEW] traveler &{Age:38 VaccineType:0 LotNumber:375575798126006 Dob:494553600 MedicalRecordNum:375042995900516 MedicalRecordHash:[17 98 106 244 132 62 241 231 196 113 129 5 253 224 238 79 246 161 104 61 189 127 114 41 64 77 151 71 131 215 165 134] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:8404393923}
+18:52:03 DBG constraint system solver done nbConstraints=33556 took=43.972893
+18:52:05 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1653.442081
+[OK] Proof sent successfully
+
+2024/07/04 18:52:08 [NEW] traveler &{Age:31 VaccineType:0 LotNumber:377672722380568 Dob:725155200 MedicalRecordNum:346522216819391 MedicalRecordHash:[4 234 50 170 77 196 112 131 221 133 253 14 230 150 126 8 8 57 3 12 86 143 110 118 221 58 253 116 97 48 255 138] CountryFrom:0 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:3542838728}
+18:52:08 DBG constraint system solver done nbConstraints=33556 took=46.557995
+18:52:10 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1639.290025
+[OK] Proof sent successfully
+
+2024/07/04 18:52:13 [NEW] traveler &{Age:18 VaccineType:1 LotNumber:342077737910795 Dob:1128124800 MedicalRecordNum:343777193068912 MedicalRecordHash:[6 106 138 48 169 215 30 29 134 80 162 60 169 245 181 175 165 152 154 210 15 47 80 50 238 153 143 167 174 235 162 236] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:4053369600}
+18:52:14 DBG constraint system solver done nbConstraints=33556 took=51.582639
+18:52:15 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1667.905173
+[OK] Proof sent successfully
+
+2024/07/04 18:52:18 [NEW] traveler &{Age:52 VaccineType:0 LotNumber:372006834451029 Dob:49766400 MedicalRecordNum:377960932955850 MedicalRecordHash:[2 128 212 33 229 128 74 104 124 53 139 76 181 114 80 52 29 249 207 5 180 241 225 176 174 100 229 176 25 200 11 180] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:3380406738}
+18:52:19 DBG constraint system solver done nbConstraints=33556 took=46.936201
+18:52:20 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1672.545366
+[OK] Proof sent successfully
+
+2024/07/04 18:52:23 [!!] No YellowFever Vaccination and from/to Yellow Fever Area
+2024/07/04 18:52:23 [NEW] traveler &{Age:44 VaccineType:1 LotNumber:373589298744588 Dob:311644800 MedicalRecordNum:376505708929314 MedicalRecordHash:[7 62 140 69 144 167 55 107 168 80 77 109 159 25 145 138 165 34 150 143 74 214 129 146 143 21 250 226 132 176 206 13] CountryFrom:2 CountryTo:0 VaccinatedSecret:0 VaccineExpDate:0}
+18:52:24 ERR error="constraint #21339 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:52:24 [X] Constraints not met, unable to create valid proof: constraint #21339 is not satisfied: 1 ⋅ 1 != 0
+
+2024/07/04 18:52:28 [NEW] traveler &{Age:0 VaccineType:1 LotNumber:370558268946578 Dob:1701216000 MedicalRecordNum:341369676168135 MedicalRecordHash:[34 31 123 210 248 2 123 188 142 32 19 175 69 30 1 27 57 143 65 12 149 161 190 232 184 96 58 15 98 140 78 194] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:4551472348}
+18:52:29 DBG constraint system solver done nbConstraints=33556 took=49.641511
+18:52:30 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1668.454081
+[OK] Proof sent successfully
+
+2024/07/04 18:52:33 [NEW] traveler &{Age:35 VaccineType:1 LotNumber:348877823660881 Dob:590630400 MedicalRecordNum:341910744832062 MedicalRecordHash:[11 25 201 128 40 207 41 87 242 21 143 57 54 147 154 195 197 146 70 228 153 47 14 39 163 68 0 178 174 209 148 17] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:6214672353}
+18:52:34 DBG constraint system solver done nbConstraints=33556 took=44.136022
+18:52:35 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1735.129391
+[OK] Proof sent successfully
+
+2024/07/04 18:52:38 [NEW] traveler &{Age:2 VaccineType:1 LotNumber:377935586201190 Dob:1637280000 MedicalRecordNum:379145821408507 MedicalRecordHash:[6 182 44 115 43 8 150 62 128 234 213 33 249 49 41 172 35 81 78 247 108 130 98 39 241 131 210 12 135 161 46 12] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:4073421158}
+18:52:39 DBG constraint system solver done nbConstraints=33556 took=48.523911
+18:52:40 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1681.099047
+[OK] Proof sent successfully
+
+2024/07/04 18:52:43 [NEW] traveler &{Age:30 VaccineType:1 LotNumber:374617746341649 Dob:745459200 MedicalRecordNum:343685529075681 MedicalRecordHash:[20 254 57 124 72 113 193 154 134 61 70 220 202 164 134 171 81 119 56 253 139 147 137 37 27 210 38 202 196 74 76 162] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:6653238763}
+18:52:44 DBG constraint system solver done nbConstraints=33556 took=48.438469
+18:52:45 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1655.096398
+[OK] Proof sent successfully
+
+2024/07/04 18:52:48 [NEW] traveler &{Age:50 VaccineType:0 LotNumber:341738331135827 Dob:123206400 MedicalRecordNum:377922711151864 MedicalRecordHash:[45 237 180 7 25 215 72 130 80 200 54 13 18 144 147 93 75 195 35 223 149 220 167 106 120 247 239 79 154 45 247 35] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:6666457968}
+18:52:49 DBG constraint system solver done nbConstraints=33556 took=43.584357
+18:52:50 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1620.501531
+[OK] Proof sent successfully
+
+2024/07/04 18:52:53 [NEW] traveler &{Age:0 VaccineType:0 LotNumber:379509416765360 Dob:1704585600 MedicalRecordNum:340751538662613 MedicalRecordHash:[0 192 99 8 248 93 48 137 11 253 12 137 76 181 202 229 72 68 246 15 107 12 84 244 146 181 168 53 246 125 41 11] CountryFrom:2 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:2943568373}
+18:52:54 DBG constraint system solver done nbConstraints=33556 took=43.86315
+18:52:55 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1707.196472
+[OK] Proof sent successfully
+
+2024/07/04 18:52:58 [!!] Not Vaccinated for Measles
+2024/07/04 18:52:58 [NEW] traveler &{Age:51 VaccineType:0 LotNumber:348647445736765 Dob:104371200 MedicalRecordNum:342619699041457 MedicalRecordHash:[0 190 112 87 195 108 30 243 50 24 129 28 177 42 112 168 59 15 24 8 187 136 96 187 173 62 37 166 48 143 90 88] CountryFrom:2 CountryTo:1 VaccinatedSecret:0 VaccineExpDate:0}
+18:52:59 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:52:59 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:53:03 [NEW] traveler &{Age:14 VaccineType:1 LotNumber:372702705135063 Dob:1249689600 MedicalRecordNum:374249571780156 MedicalRecordHash:[18 166 49 102 161 199 17 219 52 42 73 99 108 88 143 79 10 119 73 133 7 131 27 235 189 111 24 227 14 139 17 80] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:5510685183}
+18:53:04 DBG constraint system solver done nbConstraints=33556 took=53.625687
+18:53:05 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1666.234681
+[OK] Proof sent successfully
+
+2024/07/04 18:53:08 [NEW] traveler &{Age:14 VaccineType:1 LotNumber:340997058974153 Dob:1271116800 MedicalRecordNum:377600360096080 MedicalRecordHash:[12 39 135 106 140 30 241 233 141 169 67 210 57 8 214 238 107 85 249 87 206 237 19 90 179 187 118 251 141 248 221 133] CountryFrom:1 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:4547497988}
+18:53:09 DBG constraint system solver done nbConstraints=33556 took=44.5274
+18:53:10 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1681.8641
+[OK] Proof sent successfully
+
+2024/07/04 18:53:14 [NEW] traveler &{Age:13 VaccineType:0 LotNumber:346519106575004 Dob:1291939200 MedicalRecordNum:346989115306824 MedicalRecordHash:[27 30 187 103 121 146 5 124 108 86 231 207 134 162 215 251 52 236 134 120 133 149 34 170 66 8 212 64 130 186 252 61] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:5457030794}
+18:53:14 DBG constraint system solver done nbConstraints=33556 took=43.863893
+18:53:15 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1691.065782
+[OK] Proof sent successfully
+
+2024/07/04 18:53:19 [NEW] traveler &{Age:45 VaccineType:0 LotNumber:370702626492855 Dob:300758400 MedicalRecordNum:378310225829808 MedicalRecordHash:[46 209 192 207 231 211 137 126 121 96 101 174 64 13 86 247 130 18 190 63 106 250 5 98 199 139 162 210 18 42 186 60] CountryFrom:0 CountryTo:1 VaccinatedSecret:1 VaccineExpDate:2751414799}
+18:53:19 DBG constraint system solver done nbConstraints=33556 took=47.533362
+18:53:20 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1629.592849
+[OK] Proof sent successfully
+
+2024/07/04 18:53:24 [NEW] traveler &{Age:7 VaccineType:1 LotNumber:378266285297154 Dob:1480118400 MedicalRecordNum:376215274520958 MedicalRecordHash:[47 242 88 70 1 152 216 152 20 93 122 146 79 57 95 86 182 51 235 215 2 83 200 10 122 183 53 101 254 76 213 185] CountryFrom:1 CountryTo:2 VaccinatedSecret:1 VaccineExpDate:3635632404}
+18:53:24 DBG constraint system solver done nbConstraints=33556 took=48.640103
+18:53:25 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1582.058432
+[OK] Proof sent successfully
+
+2024/07/04 18:53:29 [!!] Not Vaccinated for Measles
+2024/07/04 18:53:29 [NEW] traveler &{Age:14 VaccineType:0 LotNumber:343492946163054 Dob:1274918400 MedicalRecordNum:345117659527904 MedicalRecordHash:[2 184 114 186 138 12 251 117 87 61 140 4 58 146 149 123 34 8 187 96 115 158 181 243 244 66 173 194 11 187 135 86] CountryFrom:1 CountryTo:2 VaccinatedSecret:0 VaccineExpDate:0}
+18:53:29 ERR error="constraint #7112 is not satisfied: 1 ⋅ 0 != 1" nbConstraints=33556
+2024/07/04 18:53:29 [X] Constraints not met, unable to create valid proof: constraint #7112 is not satisfied: 1 ⋅ 0 != 1
+
+2024/07/04 18:53:34 [NEW] traveler &{Age:43 VaccineType:1 LotNumber:376503936263800 Dob:339120000 MedicalRecordNum:343664090834775 MedicalRecordHash:[1 122 128 147 216 145 131 178 86 107 176 131 29 150 250 70 40 110 25 192 65 198 185 220 200 200 184 44 178 163 125 106] CountryFrom:1 CountryTo:2 VaccinatedSecret:0 VaccineExpDate:0}
+18:53:34 DBG constraint system solver done nbConstraints=33556 took=57.245394
+18:53:35 DBG prover done acceleration=none backend=groth16 curve=bn254 nbConstraints=33556 took=1675.115905
+[OK] Proof sent successfully
+
+2024/07/04 18:53:39 [!!] Vaccine expiration time has expired!
+2024/07/04 18:53:39 [NEW] traveler &{Age:10 VaccineType:1 LotNumber:348367540237593 Dob:1389571200 MedicalRecordNum:376894624500803 MedicalRecordHash:[39 75 3 159 205 21 223 79 60 185 2 252 222 27 60 204 200 171 178 228 211 246 210 200 208 155 87 158 142 77 51 135] CountryFrom:2 CountryTo:0 VaccinatedSecret:1 VaccineExpDate:1645574400}
+18:53:39 ERR error="constraint #33224 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:53:39 [X] Constraints not met, unable to create valid proof: constraint #33224 is not satisfied: 1 ⋅ 1 != 0
+
+2024/07/04 18:53:44 [!!] No YellowFever Vaccination and from/to Yellow Fever Area
+2024/07/04 18:53:44 [NEW] traveler &{Age:45 VaccineType:1 LotNumber:371864288485165 Dob:270345600 MedicalRecordNum:373531245071625 MedicalRecordHash:[0 245 28 207 54 75 10 252 120 198 56 69 167 141 70 43 255 166 168 237 249 238 123 111 99 236 203 176 84 6 113 104] CountryFrom:0 CountryTo:1 VaccinatedSecret:0 VaccineExpDate:0}
+18:53:44 ERR error="constraint #21339 is not satisfied: 1 ⋅ 1 != 0" nbConstraints=33556
+2024/07/04 18:53:44 [X] Constraints not met, unable to create valid proof: constraint #21339 is not satisfied: 1 ⋅ 1 != 0

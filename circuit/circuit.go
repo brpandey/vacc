@@ -12,18 +12,16 @@ import (
         "log"
 	"math/big"
 	"math/rand"
-
 )
 
 const (
 	measles = iota
-        //	hepatitisB
         yellowFever //https://wwwnc.cdc.gov/travel/yellowbook/2024/infections-diseases/yellow-fever
 )
 
 const (
-	vaccinated = iota + 1
-	notVaccinated
+	notVaccinated = iota
+	vaccinated
 )
 
 const (
@@ -36,7 +34,6 @@ const dateFormat = "2006-01-02"
 
 // Define fake vaccine data and patient data schema
 type VaccineData struct {
-	Type string `faker:"oneof:measles,yellowFever"`
 	LotNumber string `faker:"cc_number"`
         ExpDate string `faker:"date"`
 }
@@ -78,41 +75,49 @@ type VaccineCircuit struct {
 
 // Construct circuit's constraints
 func (circuit *VaccineCircuit) Define(api frontend.API) error {
-        // setup some simple markers for later use
-        noRisk := frontend.Variable(0)
-        isVaccinated := frontend.Variable(1)
+        // Note: Defining a variable like one := frontend.Variable(1),
+        // to reuse throughout code doesn't work => will see unsolved errors
+
+        // Note: Cmp returns 1 if i1>i2, 0 if i1=i2, -1 if i1<i2
+        meVaccineType := api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(measles)))
+        api.AssertIsBoolean(meVaccineType)
 
         // Constraint #1: if type is measles, must be vaccinated for it
+        // if specified vaccine is not measles, assume successful measles vaccination
 	measlesVaccinated := api.Select(
-		api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(measles))),
-		api.IsZero(api.Cmp(circuit.VaccinatedSecret, isVaccinated)),
-                isVaccinated, // if specified vaccine is not measles, assume we have measles vaccination
-	)
+                meVaccineType,
+                api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret)), // is vaccinated?
+                frontend.Variable(1),
+        )
 
-        api.AssertIsEqual(measlesVaccinated, isVaccinated)
+        api.AssertIsBoolean(measlesVaccinated)
+        api.AssertIsEqual(measlesVaccinated, frontend.Variable(1))
 
         // Constraint #2:
         // If travelers who are coming from or going to a country
-        // prone to Yellow Fever transmission (ghana),they must be vaccinated against it (YF)
+        // prone to Yellow Fever transmission (ghana), they must be vaccinated against YF
 
-        // Active yellow fever situation, if coming or going to Ghana
+        // Active yellow fever situation, if coming or going to Ghana, and if vaccineType is yellowFever
+        // if vaccineType is not yellowFever, assume active country status is irrelevant or 0..
+        yfVaccineType := api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(yellowFever)))
         yfActiveCountry :=
                 api.And(
-                        api.IsZero(api.Cmp(circuit.CountryFrom, frontend.Variable(ghana))),
-                        api.IsZero(api.Cmp(circuit.CountryTo, frontend.Variable(ghana))),
+                        api.Or( // countries: ghana 0, sriLanka 1, japan 2
+                                api.IsZero(api.Cmp(circuit.CountryFrom, frontend.Variable(ghana))),
+                                api.IsZero(api.Cmp(circuit.CountryTo, frontend.Variable(ghana))),
+                        ),
+                        yfVaccineType,
                 )
 
         // Check if vaccinated for yellow fever
-        // if both yellowFever and has been vaccinated: is_zero(0) && is_zero(0) => 1 && 1 => 1, else 0
-        yfActiveVaccine := api.And(
-                api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(yellowFever))),
-                api.IsZero(api.Cmp(circuit.VaccinatedSecret, isVaccinated)),
-        )
+        yfActiveVaccine := api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret))
 
-        // if the travel routes are to / fro ghana and there's no record of yf vaccination mark as risk
+        // if the travel routes are to / from ghana and there's no record of yf vaccination mark as risk
         // if active is true && no active yf vaccine => yellow fever risk
-        yfRisk := api.Select(yfActiveCountry, api.IsZero(yfActiveVaccine), noRisk)
-        api.AssertIsEqual(yfRisk, noRisk)
+
+        yfRisk := api.Select(yfActiveCountry, api.IsZero(yfActiveVaccine), frontend.Variable(0))
+        api.AssertIsBoolean(yfRisk)
+        api.AssertIsEqual(yfRisk, frontend.Variable(0))
 
         // Constraint #3:
         // Verify the person is of traveling age
@@ -126,10 +131,11 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
         // If vaccine expiration time is not zero time and is less than now, denote that vaccine is not valid
         curTime := time.Now().Unix()
 
+        // if never vaccinated, time will be 0, expired status only applies to if was previously vaccinated
         // If expTime != t.empty() && expTime < time.now() => invalid vaccine
-        vaccineInvalid := api.And(
+        vaccineExpired := api.And(
                 // If empty/zero time --> outcome is 0, else 1
-                // If outcome is 0, vaccineInvalid is automatically 0 or (valid)
+                // If outcome is 0, vaccineExpired is automatically 0 or (valid)
                 api.Cmp(circuit.VaccineExpDate, frontend.Variable(0)),
                 api.IsZero(
                         api.Add(
@@ -143,9 +149,14 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
                 // cmp: if outcome is 0, i1 < i2 or expDate < curTime, so invalid or 1
         )
 
+        // safeguard, vaccine expired state matters only if vaccinated
+        vaccineExpired = api.And(
+                vaccineExpired,
+                api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret)))
+
         // Fail if values are the same, if vaccine is indeed invalid (1)
         // Since it is past due expiration date
-        api.AssertIsDifferent(vaccineInvalid, isVaccinated)
+        api.AssertIsEqual(vaccineExpired, frontend.Variable(0))
 
         // hash mrn
         mi, _ := mimc.NewMiMC(api)
@@ -156,10 +167,8 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
 	return nil
 }
 
-
 // Generate vaccine circuit fields using faker library
 func Generate() (VaccineCircuit, bool) {
-        // Generate vaccine and patient data
         var vaccineData VaccineData
         var patientData PatientData
 
@@ -201,28 +210,33 @@ func Generate() (VaccineCircuit, bool) {
                 target = rand.Intn(3)
         }
 
-        vacIndex := rand.Intn(6)
-        vacValues := [6]int{1, 1, 2, 2, 1, 1} // 2/3 vac, 1/3 not vac
-        vac := vacValues[vacIndex]
+        index := rand.Intn(6) // use to drive weighted values
+
+        vacValues := [6]int{1, 1, 0, 1, 1, 1} // 5/6 vac, 1/6 not vac
+        vac := vacValues[index]
 
         vacType := rand.Intn(2)
 
-        expTime := vExp.Unix() * (int64(rand.Intn(3)) + int64(1)) // scale it up to have a slightly bigger number
+        // scale it up to have a slightly bigger number => to avoid too many expired vaccine dates
+        expTime := vExp.Unix() * (int64(rand.Intn(3)) + int64(2))
+        factorValues := [6]int{1, 1, 0, 0, 1, 1}
+
+        expTime = expTime + time.Now().Unix()*int64(factorValues[index]) // 1/3 chance we don't add to current time
 
         if vac != vaccinated {
                 expTime = 0 // since never vaccinated, reset exp date to zero
         }
 
         if vac != vaccinated && vacType == measles {
-                log.Println("Not Vaccinated for Measles")
+                log.Println("[!!] Not Vaccinated for Measles")
         }
 
         if (from == ghana || target == ghana ) && vac != vaccinated && vacType == yellowFever {
-                log.Println("NO YellowFever Vaccination and Yellow Fever Area")
+                log.Println("[!!] No YellowFever Vaccination and from/to Yellow Fever Area")
         }
 
         if expTime < time.Now().Unix() && expTime > 0 {
-                log.Println("Vaccine expiration time has expired!")
+                log.Println("[!!] Vaccine expiration time has expired!")
         }
 
         gen := VaccineCircuit{
@@ -238,7 +252,7 @@ func Generate() (VaccineCircuit, bool) {
                 VaccineExpDate: expTime,
         }
 
-        log.Printf("Generated circuit variables %+v\n", &gen)
+        log.Printf("[NEW] traveler %+v\n", &gen)
         return gen, true
 }
 
