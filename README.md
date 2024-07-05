@@ -31,29 +31,33 @@ func (circuit *CubicCircuit) Define(api frontend.API) error {
 }
 ```
 
-Without defining a literal equation as above, one can still follow the same idea 
-by keeping both secret and public fields and with a set of customized logical constraints / rules 
-to receive the same benefits of (private sign-public verify) signature based cryptography. 
-See below for a new circuit definition
+Without defining a literal equation as above, one can still follow the same idea.
+Keeping both secret and public fields and defining customized logical constraints / rules
+garners the same benefits of (private sign-public verify) public-key cryptography.
+See below code for a new circuit definition
 
-> The declared circuit fields and constraints get compiled into an arithmetic rank-1 constraint system over 
+> The declared circuit fields and constraints get compiled into an arithmetic rank-1 constraint system over
 > a BN254 elliptic curve which can be used to generate proving and verifying keys.
-> The secret fields are intractable to compute outside the prover akin to the discrete-logarithm problem  
+> The secret fields are intractable to compute outside the prover akin to the discrete-logarithm problem
 > (e.g Diffie-Hellman key exchange) set in a different context
 
-The Diffie-Hellman key exchange follows with parameters: 
-1) a large prime p, 2) a generator some integer g, 
-3) the private key x, 4) and the public key being: y = g^x mod p
+The Diffie-Hellman key exchange uses the following parameters:
+1) a large prime p,
+2) a generator some integer g,
+3) the private key x,
+4) and the public key being: y = g^x mod p
 
 This is equivalent to multiplying g by itself x times
 
-> In ECC, the private key is some integer x, and the public key is Y = x * G. 
+> In ECC, the private key is some integer x, and the public key is Y = x * G.
 > This is equivalent to adding the generator G to itself x times, or 'dot'-ing points together on an eliptic curve x times
+
 > In both cases, obtaining y or Y from x is easy, but obtaining x (the secret) from y or Y follows to be intractable
-> => Elliptic Curves permit much shorter public keys along with more efficient calculation in comparison to their classic counterparts
+
+=> Elliptic Curves permit much shorter public keys along with more efficient calculation in comparison to their classic asymmetric counterparts
 
 ```rust
-// Construct circuit's constraints
+// Define Vaccine circuit constraints
 func (circuit *VaccineCircuit) Define(api frontend.API) error {
         // Note: Cmp returns 1 if i1>i2, 0 if i1=i2, -1 if i1<i2
         meVaccineType := api.IsZero(api.Cmp(circuit.VaccineType, frontend.Variable(measles)))
