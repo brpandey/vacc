@@ -8,9 +8,32 @@
 
 ![ECC](https://github.com/brpandey/vacc/blob/main/ecc.jpg?raw=true)
 
-> Illustrates travel vaccine verification uisng multiple prover workers to generate proofs
+> Illustrates simple travel vaccine verification using multiple prover workers to generate proofs
 > and verify them by a verifier without leaking any sensitive personal data
 
+Suppose that travellers crossing international borders (border control) or
+getting medical care in a foreign country, need to prove to a service that they have been
+vaccinated without actually revealing their personal medical secrets.  Every country has their own requirements
+and recommendations based on the region of the world they are in and may have different health issues for their
+population.
+
+For example some countries may have active situations with yellow fever or measles.
+With zero knowledge proofs it is possible to prove that one possess the adequate medical protections without 
+revealing its complexities and secret data.
+
+Essentially this works by:
+
+1) Convert your medical vaccine information into a vaccine circuit.  The circuit represents the equations that
+represent your medical data e.g. vaccine history
+
+2) Generate randomness (a witness) which solves the circuit equation constraints
+
+3) Send the circuit + public witness to the authenticating service (without revealing all your medical data)
+
+4) The authenticating service verifies the constraint equations hold true (given the circuit + witness)
+Assuming verification is successful, the service knows your immunization history is adequate
+
+5) The service then grants access
 
 In a simple example, a circuit could model this mathematical equation: x^3 + x + 5 == y
 'x' would be the secret field, and 'y' the public field
@@ -41,18 +64,18 @@ See below code for a new circuit definition
 > The secret fields are intractable to compute outside the prover akin to the discrete-logarithm problem
 > (e.g Diffie-Hellman key exchange) set in a different context
 
-The Diffie-Hellman key exchange uses the following parameters:
-1) a large prime p,
-2) a generator some integer g,
-3) the private key x,
-4) and the public key being: y = g^x mod p
+> The Diffie-Hellman key exchange uses the following parameters:
+> 1) a large prime p,
+> 2) a generator some integer g,
+> 3) the private key x,
+> 4) and the public key being: y = g^x mod p
 
 This is equivalent to multiplying g by itself x times
 
-> In ECC, the private key is some integer x, and the public key is Y = x * G.
-> This is equivalent to adding the generator G to itself x times, or 'dot'-ing points together on an eliptic curve x times
+In ECC, the private key is some integer x, and the public key is Y = x * G.
+This is equivalent to adding the generator G to itself x times, or 'dot'-ing points together on an eliptic curve x times
 
-> In both cases, obtaining y or Y from x is easy, but obtaining x (the secret) from y or Y follows to be intractable
+In both cases, obtaining y or Y from x is easy, but obtaining x (the secret) from y or Y follows to be intractable
 
 => Elliptic Curves permit much shorter public keys along with more efficient calculation in comparison to their classic asymmetric counterparts
 
