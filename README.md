@@ -14,29 +14,28 @@
 Suppose that travellers crossing international borders (border control) or
 getting medical care in a foreign country, need to prove to a service that they have been
 vaccinated without actually revealing their personal medical secrets.  Every country has their own requirements
-and recommendations based on the region of the world they are in and may have different health issues for their
-population.
+and recommendations based on their location and may have different health issues for their population.
 
-For example some countries may have active situations with yellow fever or measles.
-With zero knowledge proofs it is possible to prove that one possess the adequate medical protections without 
-revealing its complexities and secret data.
+For example, some countries may have active yellow fever or measles outbreaks.
+With zero knowledge proofs it is possible to prove one possesses the adequate medical protections without 
+revealing the underlying medical history and secret data.
 
 Essentially this works by:
 
-1) Convert your medical vaccine information into a vaccine circuit.  The circuit represents the equations that
-represent your medical data e.g. vaccine history
+1) Converting medical vaccine information into a vaccine (arithmetic) circuit.  
+The circuit represents the equations that represent the medical data e.g. vaccine history
 
 2) Generate randomness (a witness) which solves the circuit equation constraints
 
 3) Send the circuit + public witness to the authenticating service (without revealing all your medical data)
 
 4) The authenticating service verifies the constraint equations hold true (given the circuit + witness)
-Assuming verification is successful, the service knows your immunization history is adequate
+Assuming verification is successful, the service knows the immunization history is adequate
 
 5) The service then grants access
 
-In a simple example, a circuit could model this mathematical equation: x^3 + x + 5 == y
-'x' would be the secret field, and 'y' the public field
+In a simple example, a circuit could model this polynomial mathematical equation: x^3 + x + 5 == y
+('x' would be the secret field, and 'y' the public field)
 
 ```rust
 // CubicCircuit defines a simple circuit
@@ -54,9 +53,9 @@ func (circuit *CubicCircuit) Define(api frontend.API) error {
 }
 ```
 
-Without defining a literal equation as above, one can still follow the same idea.
+Without defining a polynomial equation as above, one can still follow the same idea.
 Keeping both secret and public fields and defining customized logical constraints / rules
-garners the same benefits of (private sign-public verify) public-key cryptography.
+garners similar benefits of (private sign/public verify) public-key cryptography and signature authentication.
 See below code for a new circuit definition
 
 > The declared circuit fields and constraints get compiled into an arithmetic rank-1 constraint system over
@@ -72,12 +71,20 @@ See below code for a new circuit definition
 
 This is equivalent to multiplying g by itself x times
 
-In ECC, the private key is some integer x, and the public key is Y = x * G.
-This is equivalent to adding the generator G to itself x times, or 'dot'-ing points together on an eliptic curve x times
+In ECC, 
+1) the private key is some integer x, 
+2) the public key is Y = x * G.
+
+> This is equivalent to adding the generator G (base point) to itself x times, or 'dot'-ing points together on an eliptic curve x times
 
 In both cases, obtaining y or Y from x is easy, but obtaining x (the secret) from y or Y follows to be intractable
 
-=> Elliptic Curves permit much shorter public keys along with more efficient calculation in comparison to their classic asymmetric counterparts
+> Elliptic Curves permit much shorter public keys along with more efficient calculation in comparison to their classic asymmetric counterparts.
+> The public key in the elliptic curve approach is essentially the generator (or base point) on the curve, versus the product of two large primes.
+> They also are not susceptible to index calculus attacks found in RSA.
+> Since these attacks don't apply currently, it is believed to be safe using smaller elliptic curve key sizes. 
+> The equivalent strength of RSA / DH modulus key size is 3072 bits, compared to 256 bits for ECC key, and 128 bits for Symmetric Encryption key.
+> (Thank you former Professor Neal Koblitz winner of the Levchin Prize)
 
 ```rust
 // Define Vaccine circuit constraints
@@ -88,7 +95,7 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
 
         // Constraint #1: if type is measles, must be vaccinated for it
         // if specified vaccine is not measles, assume successful measles vaccination
-	    measlesVaccinated := api.Select(
+	      measlesVaccinated := api.Select(
                 meVaccineType,
                 api.IsZero(api.Cmp(frontend.Variable(1), circuit.VaccinatedSecret)), // is vaccinated?
                 frontend.Variable(1),
@@ -128,7 +135,7 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
         api.AssertIsLessOrEqual(circuit.Age, frontend.Variable(100))
 
         // Constraint #4:
-	    // Verify that vaccineType is "measles", or "yellow fever"
+	      // Verify that vaccineType is "measles", or "yellow fever"
         api.AssertIsLessOrEqual(circuit.VaccineType, frontend.Variable(yellowFever))
 
         // Constraint #5:
