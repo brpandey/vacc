@@ -11,7 +11,7 @@
 > Illustrates simple travel vaccine verification using multiple prover workers to generate proofs
 > and verify them by a verifier without leaking any sensitive personal data
 
-Suppose that travellers crossing international borders (border control) or
+Suppose that travellers, crossing international borders (border control) or
 getting medical care in a foreign country, need to prove to a service that they have been
 vaccinated without actually revealing their personal medical secrets.  Every country has their own requirements
 and recommendations based on their location and may have different health issues for their population.
@@ -54,8 +54,8 @@ func (circuit *CubicCircuit) Define(api frontend.API) error {
 ```
 
 Without defining a polynomial equation as above, one can still follow the same idea.
-Keeping both secret and public fields and defining customized logical constraints / rules
-garners similar benefits of (private sign/public verify) public-key cryptography and signature authentication.
+Keeping the notion of public + private fields and defining customized logical constraints / rules
+should garner the same benefits of (private sign/public verify) public-key cryptography and signature authentication.
 See below code for a new circuit definition
 
 > The declared circuit fields and constraints get compiled into an arithmetic rank-1 constraint system over
@@ -84,7 +84,7 @@ In both cases, obtaining y or Y from x is easy, but obtaining x (the secret) fro
 > They also are not susceptible to index calculus attacks found in RSA.
 > Since these attacks don't apply currently, it is believed to be safe using smaller elliptic curve key sizes. 
 > The equivalent strength of RSA / DH modulus key size is 3072 bits, compared to 256 bits for ECC key, and 128 bits for Symmetric Encryption key.
-> (Thank you former Professor Neal Koblitz winner of the Levchin Prize)
+> (Thank you former Professor Neal Koblitz, winner of the Levchin Prize, and co-creator of elliptic curve cryptography)
 
 ```rust
 // Define Vaccine circuit constraints

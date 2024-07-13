@@ -31,7 +31,7 @@ require (
 	rsc.io/tmplfunc v0.0.3 // indirect
 )
 
-replace github.com/brpandey/vacc/circuit => /home/brpandey/Workspace/github/vacc/circuit
-replace github.com/brpandey/vacc/setup => /home/brpandey/Workspace/github/vacc/setup
-replace github.com/brpandey/vacc/msg => /home/brpandey/Workspace/github/vacc/msg
+// replace github.com/brpandey/vacc/circuit => /home/brpandey/Workspace/github/vacc/circuit
+// replace github.com/brpandey/vacc/setup => /home/brpandey/Workspace/github/vacc/setup
+// replace github.com/brpandey/vacc/msg => /home/brpandey/Workspace/github/vacc/msg
 
