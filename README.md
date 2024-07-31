@@ -206,3 +206,9 @@ func (circuit *VaccineCircuit) Define(api frontend.API) error {
 18:53:35 DBG verifier done backend=groth16 curve=bn254 took=7.896169
 [Ok] Proof verified successfully, traveler passed authentication
 ```
+
+> Note: This implementation assumes that the prover is a honest prover.
+> The verifier needs to be shown an indirect proof that the vacc circuit was constructed properly.
+> Otherwise the prover could omit important checks on whether the vaccine was actually received.
+> [Soundness](https://medium.com/web3studio/a-simple-explanation-of-zero-knowledge-proofs-ca574092e73b)
+
